@@ -1,9 +1,11 @@
 
 import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todoapp/components/button.dart';
 import 'package:todoapp/components/donate_button.dart';
@@ -32,6 +34,10 @@ class _HomePageState extends State<HomePage> {
   final testimonial_text = [sliderTitle5Text,sliderTitle6Text,sliderTitle7Text];
   final testimonal_list = [sliderImage10,sliderImage11,sliderImage12];
   var nameController = TextEditingController();
+  var emailController = TextEditingController();
+  var phoneController = TextEditingController();
+  var messageController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -383,7 +389,7 @@ class _HomePageState extends State<HomePage> {
                          Padding(
                            padding: const EdgeInsets.only(top: 20.0,right: 250.0),
                            child: TextField(
-                             controller: nameController,
+                             controller: emailController,
                              decoration: InputDecoration(
                                hintText: "Email Address*",
                                hintStyle: TextStyle(color: Colors.white),
@@ -394,7 +400,7 @@ class _HomePageState extends State<HomePage> {
                          Padding(
                            padding: const EdgeInsets.only(top: 20.0,right: 250.0),
                            child: TextField(
-                             controller: nameController,
+                             controller: phoneController,
                              decoration: InputDecoration(
                                hintText: "Phone Number*",
                                hintStyle: TextStyle(color: Colors.white),
@@ -404,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                          Padding(
                            padding: const EdgeInsets.only(top: 20.0,right: 250.0),
                            child: TextField(
-                             controller: nameController,
+                             controller: messageController,
                              decoration: InputDecoration(
                                hintText: "Message*",
                                hintStyle: TextStyle(color: Colors.white),
@@ -415,7 +421,17 @@ class _HomePageState extends State<HomePage> {
                          Padding(
                            padding: const EdgeInsets.only(top: 50.0),
                            child: ElevatedButton(onPressed: (){
-                             print(nameController.text.toString());
+                             var id = FirebaseFirestore.instance.collection("form").doc().id;
+                             FirebaseFirestore.instance.collection("form").doc(id)
+                                 .set({
+                               "name" : nameController.text.toString(),
+                               "email" : emailController.text.toString(),
+                               "phone" : phoneController.text.toString(),
+                               "message" : messageController.text.toString(),
+                             }).whenComplete(() {
+                               Get.snackbar("Form Submitted","Thanks for your submission");
+                             });
+                             
                            }, child: Text("Submit Now")),
                          ),
 

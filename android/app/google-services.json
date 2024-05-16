@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "44433425953",
+    "project_id": "women-reach-9443c",
+    "storage_bucket": "women-reach-9443c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44433425953:android:f63391401c7506c9164560",
+        "android_client_info": {
+          "package_name": "com.example.todoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFPmwjJ_GGtPev3PBuVKgMXsSf3_-i9p4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

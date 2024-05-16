@@ -1,16 +1,13 @@
 import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todoapp/components/button.dart';
-import 'package:todoapp/components/donate_button.dart';
 import 'package:todoapp/components/footer.dart';
 import 'package:todoapp/components/header.dart';
-import 'package:todoapp/util/app_text.dart';
-import 'package:todoapp/util/image_path.dart';
-import 'package:todoapp/util/volunimage.dart';
 
 class Contact extends StatefulWidget {
   const Contact({super.key});
@@ -21,6 +18,10 @@ class Contact extends StatefulWidget {
 
 class _ContactState extends State<Contact> {
   var nameController = TextEditingController();
+  var emailController = TextEditingController();
+  var phoneController = TextEditingController();
+  var messageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,7 +181,7 @@ class _ContactState extends State<Contact> {
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0,right: 250),
                             child: TextField(
-                              controller: nameController,
+                              controller: emailController,
                               decoration: InputDecoration(
                                 hintText: "Email Address*",
                                 hintStyle: TextStyle(color: Colors.black),
@@ -191,7 +192,7 @@ class _ContactState extends State<Contact> {
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0,right: 250),
                             child: TextField(
-                              controller: nameController,
+                              controller: phoneController,
                               decoration: InputDecoration(
                                 hintText: "Phone Number*",
                                 hintStyle: TextStyle(color: Colors.black),
@@ -201,7 +202,7 @@ class _ContactState extends State<Contact> {
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0,right: 250),
                             child: TextField(
-                              controller: nameController,
+                              controller: messageController,
                               decoration: InputDecoration(
                                 hintText: "Message*",
                                 hintStyle: TextStyle(color: Colors.black),
@@ -212,7 +213,16 @@ class _ContactState extends State<Contact> {
                           Padding(
                             padding: const EdgeInsets.only(top: 50.0),
                             child: ElevatedButton(onPressed: (){
-                              print(nameController.text.toString());
+                              // print(nameController.text.toString());
+                              FirebaseFirestore.instance.collection("contact").doc()
+                                  .set({
+                                  "name" : nameController.text.toString(),
+                                  "email" : emailController.text.toString(),
+                                  "phone" : phoneController.text.toString(),
+                                  "message" : messageController.text.toString(),
+                              }).whenComplete(() {
+                                Get.snackbar("Thanks for your contact","");
+                              });
                             }, child: Text("Submit Now")),
                           ),
 

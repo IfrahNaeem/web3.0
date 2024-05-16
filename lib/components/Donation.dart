@@ -1,13 +1,16 @@
 import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todoapp/components/button.dart';
 import 'package:todoapp/components/donate_button.dart';
 import 'package:todoapp/components/footer.dart';
 import 'package:todoapp/components/header.dart';
+import 'package:todoapp/text_widget.dart';
 import 'package:todoapp/util/app_text.dart';
 import 'package:todoapp/util/image_path.dart';
 import 'package:todoapp/util/volunimage.dart';
@@ -20,6 +23,14 @@ class Donation extends StatefulWidget {
 }
 
 class _DonationState extends State<Donation> {
+
+  var nameControler = TextEditingController();
+  var cardNumberController = TextEditingController();
+  var expireController = TextEditingController();
+  var cvvController = TextEditingController();
+
+  var defaultHeight = 10.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +46,7 @@ class _DonationState extends State<Donation> {
                     height: 500.0,
                     color: Colors.deepOrange,
                     child: Image.asset(
-                      "assets/images/Project_banner.png",
+                      "assets/images/Project_banner.webp",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -89,17 +100,100 @@ class _DonationState extends State<Donation> {
                 width: 1300,
                 height: 600,
                 color: Colors.white,
-                child: Row(
+                padding: EdgeInsets.all(50.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Container(
 
-
+                    TextWidget(text: "Payment Details", size: 18.0,color: Colors.black,),
+                    SizedBox(height: defaultHeight,),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0,right: 250),
+                      child: TextField(
+                        controller: nameControler,
+                        decoration: InputDecoration(
+                          hintText: "Enter Name Card",
+                          hintStyle: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
 
+                    SizedBox(height: defaultHeight,),
+                    TextWidget(text: "Card Number", size: 18.0,color: Colors.black,),
+                    SizedBox(height: defaultHeight,),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0,right: 250),
+                      child: TextField(
+                        controller: cardNumberController,
+                        decoration: InputDecoration(
+                          hintText: "Card Number",
+                          hintStyle: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ),
 
+                    SizedBox(height: defaultHeight,),
+                    Row(
+                      children: [
 
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget(text: "Expiration", size: 18.0,color: Colors.black,),
+                              SizedBox(height: defaultHeight,),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0,right: 250),
+                                child: TextField(
+                                  controller: expireController,
+                                  decoration: InputDecoration(
+                                    hintText: "Expiration",
+                                    hintStyle: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 10.0,),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget(text: "CVV", size: 18.0,color: Colors.black,textAlignment: TextAlign.start,),
+                              SizedBox(height: defaultHeight,),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0,right: 250),
+                                child: TextField(
+                                  controller: cvvController,
+                                  decoration: InputDecoration(
+                                    hintText: "CVV",
+                                    hintStyle: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 50.0,),
+
+                    ElevatedButton(onPressed: (){
+                      var id = FirebaseFirestore.instance.collection("donation").doc().id;
+                      FirebaseFirestore.instance.collection("donation").doc(id).set({
+                        "name" : nameControler.text.toString(),
+                        "number" : cardNumberController.text.toString(),
+                        "expire" : expireController.text.toString(),
+                        "cvv" : cvvController.text.toString(),
+                      }).whenComplete(() {
+                        Get.snackbar("Payment Send Completed","Thanks for your donation");
+                      });
+                    }, child: Text("Donate")),
 
                   ],
                 )
